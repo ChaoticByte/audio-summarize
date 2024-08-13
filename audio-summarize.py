@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Copyright (c) 2024 Julian Müller (ChaoticByte)
+
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
