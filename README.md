@@ -38,9 +38,9 @@ audio-summarize.py -m filepath -i filepath -o filepath
 
 options:
   -h, --help   show this help message and exit
-  --summin n   The minimum lenght of a segment summary [10]
-  --summax n   The maximum lenght of a segment summary [90]
-  --segmax n   The maximum number of tokens per segment [375, max: 500]
+  --summin n   The minimum lenght of a segment summary [10, min: 5]
+  --summax n   The maximum lenght of a segment summary [90, min: 5]
+  --segmax n   The maximum number of tokens per segment [375, 5 - 500]
   -m filepath  The path to a whisper.cpp-compatible model file
   -i filepath  The path to the media file
   -o filepath  Where to save the output text to

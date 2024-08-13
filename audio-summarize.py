@@ -69,14 +69,16 @@ def summarize(chunks: List[str], summary_min: int, summary_max: int) -> str:
 
 if __name__ == "__main__":
     argp = ArgumentParser()
-    argp.add_argument("--summin", metavar="n", type=int, default=10, help="The minimum lenght of a segment summary [10]")
-    argp.add_argument("--summax", metavar="n", type=int, default=90, help="The maximum lenght of a segment summary [90]")
-    argp.add_argument("--segmax", metavar="n", type=int, default=375, help="The maximum number of tokens per segment [375, max: 500]")
+    argp.add_argument("--summin", metavar="n", type=int, default=10, help="The minimum lenght of a segment summary [10, min: 5]")
+    argp.add_argument("--summax", metavar="n", type=int, default=90, help="The maximum lenght of a segment summary [90, min: 5]")
+    argp.add_argument("--segmax", metavar="n", type=int, default=375, help="The maximum number of tokens per segment [375, 5 - 500]")
     argp.add_argument("-m", required=True, metavar="filepath", type=Path, help="The path to a whisper.cpp-compatible model file")
     argp.add_argument("-i", required=True, metavar="filepath", type=Path, help="The path to the media file")
     argp.add_argument("-o", required=True, metavar="filepath", type=Path, help="Where to save the output text to")
     args = argp.parse_args()
-    args.segmax = min(args.segmax, 500)
+    args.summin = max(5, args.summin)
+    args.summax = max(5, args.summax)
+    args.segmax = max(5, min(args.segmax, 500))
     # create tmpdir
     with TemporaryDirectory(suffix="as") as d:
         converted_audio_path = (Path(d) / "audio.wav").__str__()
