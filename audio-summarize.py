@@ -84,15 +84,15 @@ if __name__ == "__main__":
         converted_audio_path = (Path(d) / "audio.wav").__str__()
         transcript_path = (Path(d) / "transcript.txt").__str__()
         # convert using ffmpeg
-        print("* Converting media to 16kHz 16bit mono WAV")
+        print("* Converting media to the correct format ...")
         convert_audio(args.i.__str__(), converted_audio_path)
         # transcribe
-        print("* Transcribing audio")
+        print("* Transcribing audio ...")
         transcribe(args.m.__str__(), converted_audio_path, transcript_path)
         # read transcript
         text = Path(transcript_path).read_text()
     # cleanup text & summarize
-    print("* Summarizing transcript")
+    print("* Summarizing transcript ...")
     text = cleanup_text(text)
     chunks = split_text(text, args.segmax)
     summary = summarize(chunks, args.summin, args.summax)
