@@ -7,7 +7,8 @@ An audio summarizer that glues together ffmpeg, whisper.cpp and BART.
 - Python 3 (tested: 3.12)
 - ffmpeg
 - git
-- make & c/c++ compiler
+- make
+- c/c++ compiler (on Ubuntu, installing `build-essential` does the trick)
 
 ## Setup
 
@@ -33,8 +34,8 @@ Run setup.sh
 ### Usage
 
 ```
-audio-summarize.py -m filepath -i filepath -o filepath
-                    [--summin n] [--summax n] [--segmax n]
+./audio-summarize.py -m filepath -i filepath -o filepath
+                   [--summin n] [--summax n] [--segmax n]
 
 options:
   -h, --help   show this help message and exit
@@ -51,3 +52,14 @@ Example:
 ```bash
 ./audio-summarize.py -m ./tmp/whisper_ggml-small.en-q5_1.bin -i ./tmp/test.webm -o ./tmp/output.txt
 ```
+
+## How does it work?
+
+To summarize a media file, the program executes the following steps:
+
+1. Convert the media file with [ffmpeg](https://www.ffmpeg.org/) to a mono 16kHz 16bit-PCM wav file
+2. Transcribe that wav file using [whisper.cpp](https://github.com/ggerganov/whisper.cpp)
+3. Clean up the transcript (newlines, whitespaces at the beginning and end)
+4. Semantically split up the transcript into segments using [semantic-text-splitter](https://github.com/benbrandt/text-splitter) and the tokenizer for BART
+5. Summarize each segment using BART ([`facebook/bart-large-cnn`](https://huggingface.co/facebook/bart-large-cnn))
+6. Write the results to a text file
