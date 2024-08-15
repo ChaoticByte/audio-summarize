@@ -1,3 +1,4 @@
+faster-whisper
 semantic-text-splitter
 torch
 transformers
