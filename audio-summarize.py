@@ -20,12 +20,12 @@ from transformers import pipeline
 
 # Transcription
 
-def transcribe(model_name: str, audio_file: str, language: str) -> str:
+def transcribe(model_name: str, audio_file: str) -> str:
     '''Transcribe the media using faster-whisper'''
     t_chunks = []
     print("* Loading model ", end="", flush=True)
     model = WhisperModel(model_name, device="auto", compute_type="int8")
-    segments, _ = model.transcribe(audio_file, language=language, beam_size=5, condition_on_previous_text=False)
+    segments, _ = model.transcribe(audio_file, language="en", beam_size=5, condition_on_previous_text=False)
     print()
     print("* Transcribing audio ", end="", flush=True)
     for s in segments:
@@ -67,11 +67,10 @@ def summarize(chunks: List[str], summary_min: int, summary_max: int) -> str:
 if __name__ == "__main__":
     # parse commandline arguments
     argp = ArgumentParser()
-    argp.add_argument("--summin", metavar="n", type=int, default=10, help="The minimum lenght of a segment summary [10, min: 5]")
-    argp.add_argument("--summax", metavar="n", type=int, default=90, help="The maximum lenght of a segment summary [90, min: 5]")
-    argp.add_argument("--segmax", metavar="n", type=int, default=375, help="The maximum number of tokens per segment [375, 5 - 500]")
-    argp.add_argument("--lang", metavar="lang", type=str, default="en", help="The language of the audio source ['en']")
-    argp.add_argument("-m", metavar="name", type=str, default="small.en", help="The name of the whisper model to be used ['small.en']")
+    argp.add_argument("--summin", metavar="n", type=int, default=10, help="The minimum lenght of a segment summary [10] (min: 5)")
+    argp.add_argument("--summax", metavar="n", type=int, default=90, help="The maximum lenght of a segment summary [90] (min: 5)")
+    argp.add_argument("--segmax", metavar="n", type=int, default=375, help="The maximum number of tokens per segment [375] (5 - 500)")
+    argp.add_argument("-m", metavar="name", type=str, default="small.en", help="The name of the whisper model to be used [small.en]")
     argp.add_argument("-i", required=True, metavar="filepath", type=Path, help="The path to the media file")
     argp.add_argument("-o", required=True, metavar="filepath", type=Path, help="Where to save the output text to")
     args = argp.parse_args()
@@ -80,7 +79,7 @@ if __name__ == "__main__":
     args.summax = max(5, args.summax)
     args.segmax = max(5, min(args.segmax, 500))
     # transcribe
-    text = transcribe(args.m, args.i, args.lang).strip()
+    text = transcribe(args.m, args.i).strip()
     # split up into semantic segments & summarize
     chunks = split_text(text, args.segmax)
     summary = summarize(chunks, args.summin, args.summax)

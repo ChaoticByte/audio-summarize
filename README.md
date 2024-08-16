@@ -2,6 +2,10 @@
 
 An audio summarizer that glues together [faster-whisper](https://github.com/SYSTRAN/faster-whisper) and [BART](https://huggingface.co/facebook/bart-large-cnn).
 
+## Supported Languages
+
+Only English summarization is supported.
+
 ## Dependencies
 
 - Python 3 (tested: 3.12)
@@ -24,17 +28,15 @@ pip3 install -r requirements.txt
 ### Usage
 
 ```
-./audio-summarize.py -i filepath -o filepath
-                     [--summin n] [--summax n] [--segmax n]
-                     [--lang lang] [-m name]
+./audio-summarize.py -i filepath -o filepath [-m name]
+                   [--summin n] [--summax n] [--segmax n]
 
 options:
   -h, --help   show this help message and exit
-  --summin n   The minimum lenght of a segment summary [10, min: 5]
-  --summax n   The maximum lenght of a segment summary [90, min: 5]
-  --segmax n   The maximum number of tokens per segment [375, 5 - 500]
-  --lang lang  The language of the audio source ['en']
-  -m name      The name of the whisper model to be used ['small.en']
+  --summin n   The minimum lenght of a segment summary [10] (min: 5)
+  --summax n   The maximum lenght of a segment summary [90] (min: 5)
+  --segmax n   The maximum number of tokens per segment [375] (5 - 500)
+  -m name      The name of the whisper model to be used [small.en]
   -i filepath  The path to the media file
   -o filepath  Where to save the output text to
 ```
